@@ -1,5 +1,9 @@
 .vercel
- 
+node_modules/
+package-lock.json
+populate_insforge.sql
+AGENTS.md
+
 # InsForge & AI agent skills
 .insforge
 .agent
