@@ -346,23 +346,19 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
         <div class="table-card" style="padding: 28px;">
-          <h3 style="font-family: 'Poppins', sans-serif; margin-bottom: 16px;">Firebase Web Credentials</h3>
-          <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; line-height: 1.6;">Enter your Firebase Firestore credentials here. All product additions and deletions will immediately sync across all mobile devices &amp; browsers live.</p>
+          <h3 style="font-family: 'Poppins', sans-serif; margin-bottom: 16px;">InsForge Database Credentials</h3>
+          <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; line-height: 1.6;">Your website is live connected to InsForge PostgreSQL backend. Enquiries and product records sync directly with InsForge PostgREST API.</p>
           
           <div class="input-group">
-            <label>Firebase API Key</label>
-            <input type="password" id="fbApiKey" placeholder="AIzaSy...">
+            <label>Backend URL</label>
+            <input type="text" id="insforgeUrl" value="https://i3yh548q.ap-southeast.insforge.app" readonly>
           </div>
           <div class="input-group">
-            <label>Project ID</label>
-            <input type="text" id="fbProjectId" placeholder="sriammantoys-db">
+            <label>Anon Key</label>
+            <input type="password" id="insforgeAnonKey" value="anon_97dd64a6d1c7f0dc0b98adce58f31e92ace8984186b2b8cc885d6d2ae9d76df4" readonly>
           </div>
-          <div class="input-group">
-            <label>Auth Domain</label>
-            <input type="text" id="fbAuthDomain" placeholder="sriammantoys.firebaseapp.com">
-          </div>
-          <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="testFirebaseConn()">
-            <i class="fa-solid fa-plug"></i> Test Firebase Connection
+          <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="testInsForgeConn()">
+            <i class="fa-solid fa-database"></i> Test InsForge DB Connection
           </button>
         </div>
 
@@ -457,6 +453,7 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
   </div>
 </div>
 
+<script src="js/insforge-db.js"></script>
 <script src="js/gallery-data.js"></script>
 <script>
 /* DEFAULT CATEGORIES */
@@ -726,8 +723,17 @@ function saveSettings() {
   alert('Configuration saved!');
 }
 
-function testFirebaseConn() {
-  alert('Firebase is active and listening for live sync!');
+async function testInsForgeConn() {
+  if (!window.insforgeDB) {
+    alert('InsForge DB SDK connector missing!');
+    return;
+  }
+  try {
+    const products = await window.insforgeDB.getRecords('products', { limit: 5 });
+    alert(`⚡ InsForge Database Connected Successfully!\n\nBase URL: https://i3yh548q.ap-southeast.insforge.app\nStatus: Online\nSample Records Fetched: ${products.length} items from database.`);
+  } catch (err) {
+    alert(`InsForge Connection Error: ${err.message}`);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initAdminData);
