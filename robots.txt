@@ -1,23 +1,39 @@
-# User-agent rules for search engine crawlers & AI Answer Engines (AEO/GEO)
+# User-agent rules for search engines (Google, Bing) & AI Answer Engines (AEO/GEO)
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /.env
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
 
 User-agent: GPTBot
 Allow: /
+Disallow: /admin.html
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin.html
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin.html
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin.html
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin.html
 
-User-agent: Bytespider
+User-agent: Applebot
 Allow: /
+Disallow: /admin.html
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
 
 Sitemap: https://www.sriammantoys.in/sitemap.xml

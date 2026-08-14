@@ -6,7 +6,7 @@
 <title>Admin Panel | Sri Amman Toys &amp; Chocolates</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- Firebase Compat Web SDK -->
@@ -179,16 +179,16 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
     <p>Sri Amman Toys &amp; Chocolates Management</p>
     <div class="input-group">
       <label for="adminUser">Admin Username</label>
-      <input type="text" id="adminUser" placeholder="Username (sri amman)">
+      <input type="text" id="adminUser" placeholder="Enter Username">
     </div>
     <div class="input-group">
       <label for="adminPass">Admin Password</label>
-      <input type="password" id="adminPass" placeholder="Password (rajesh)" onkeyup="if(event.key==='Enter') checkLogin()">
+      <input type="password" id="adminPass" placeholder="Enter Password" onkeyup="if(event.key==='Enter') checkLogin()">
     </div>
     <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="checkLogin()">
       <i class="fa-solid fa-right-to-bracket"></i> Login to Admin
     </button>
-    <p id="loginError" style="color: #ef4444; font-size: 12.5px; margin-top: 12px; display: none;">Incorrect Username or Password! (User: sri amman | Pass: rajesh)</p>
+    <p id="loginError" style="color: #ef4444; font-size: 12.5px; margin-top: 12px; display: none;">Incorrect Username or Password. Please try again.</p>
   </div>
 </div>
 
@@ -196,7 +196,7 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
 <header class="admin-header">
   <div class="admin-brand">
     <img src="images/logo.png" alt="Sri Amman Toys" onerror="this.src='images/about_promo.png'">
-    <span>Sri Amman Toys Admin</span>
+    <span><span style="color:#3a7fc1;font-weight:800;">Sri</span> <span style="color:#f59e0b;font-weight:800;">Amman</span> <span style="color:#e0314b;font-weight:800;">Toys</span> Admin</span>
   </div>
   <div class="admin-actions">
     <a href="index.html" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-globe"></i> Open Main Website</a>
@@ -351,11 +351,11 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
           
           <div class="input-group">
             <label>Backend URL</label>
-            <input type="text" id="insforgeUrl" value="https://i3yh548q.ap-southeast.insforge.app" readonly>
+            <input type="text" id="insforgeUrl" placeholder="Loaded from .env file (INSFORGE_URL)" readonly>
           </div>
           <div class="input-group">
             <label>Anon Key</label>
-            <input type="password" id="insforgeAnonKey" value="anon_97dd64a6d1c7f0dc0b98adce58f31e92ace8984186b2b8cc885d6d2ae9d76df4" readonly>
+            <input type="password" id="insforgeAnonKey" placeholder="Loaded from .env file (INSFORGE_ANON_KEY)" readonly>
           </div>
           <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="testInsForgeConn()">
             <i class="fa-solid fa-database"></i> Test InsForge DB Connection
@@ -429,7 +429,7 @@ td { padding: 16px 20px; border-top: 1px solid var(--border); vertical-align: mi
 <div class="modal-overlay" id="categoryModal">
   <div class="modal-box">
     <div class="modal-header">
-      <h3>Add New Category</h3>
+      <h3 id="catModalTitle">Add New Category</h3>
       <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
     </div>
     <form onsubmit="saveCategory(event)">
@@ -503,17 +503,73 @@ function switchTab(tabId) {
 }
 
 /* DATA INITIALIZATION */
-function initAdminData() {
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+async function initAdminData() {
   saveToLocalStorage();
   renderCategories();
   populateCategoryDropdowns();
   renderProducts();
+  await syncFromInsForge();
+}
+
+async function syncFromInsForge() {
+  try {
+    if (!window.insforgeDB) return;
+    const remoteCats = await window.insforgeDB.getRecords('categories');
+    if (remoteCats && remoteCats.length > 0) {
+      const mergedCatsMap = new Map();
+      defaultCategories.forEach(c => mergedCatsMap.set(c.id, c));
+      categories.forEach(c => mergedCatsMap.set(c.id, c));
+      remoteCats.forEach(c => mergedCatsMap.set(c.id, c));
+      categories = Array.from(mergedCatsMap.values());
+      saveToLocalStorage();
+    }
+
+    const remoteProds = await window.insforgeDB.getRecords('products');
+    if (remoteProds && remoteProds.length > 0) {
+      const dbProds = remoteProds.map(p => ({
+        id: p.id,
+        src: p.src,
+        cat: p.cat,
+        label: p.label,
+        price: p.price || 'Wholesale Rate',
+        index: p.id
+      }));
+      const existingKeys = new Set(products.map(p => (p.label || '') + (p.src || '')));
+      dbProds.forEach(p => {
+        const k = (p.label || '') + (p.src || '');
+        if (!existingKeys.has(k)) {
+          products.unshift(p);
+          existingKeys.add(k);
+        }
+      });
+      saveToLocalStorage();
+    }
+
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+  } catch (err) {
+    console.log('InsForge sync note:', err.message);
+  }
 }
 
 function saveToLocalStorage() {
   localStorage.setItem('sat_categories', JSON.stringify(categories));
   localStorage.setItem('sat_products', JSON.stringify(products));
 }
+
+let editingCategoryIndex = null;
+let editingProductIndex = null;
 
 /* CATEGORY MANAGEMENT */
 function renderCategories() {
@@ -525,11 +581,12 @@ function renderCategories() {
   categories.forEach((c, idx) => {
     const itemCount = products.filter(p => p.cat === c.id).length;
     html += `<tr>
-      <td style="font-size: 22px;">${c.icon || '📦'}</td>
-      <td><code>${c.id}</code></td>
-      <td><strong>${c.title}</strong></td>
+      <td style="font-size: 22px;">${escapeHTML(c.icon || '📦')}</td>
+      <td><code>${escapeHTML(c.id)}</code></td>
+      <td><strong>${escapeHTML(c.title)}</strong></td>
       <td><span class="badge badge-pink">${itemCount} items</span></td>
       <td>
+        <button class="btn btn-outline btn-sm" style="margin-right: 6px; border-color: #3a7fc1; color: #3a7fc1; font-weight: 600;" onclick="openEditCategoryModal(${idx})"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deleteCategory(${idx})"><i class="fa-solid fa-trash"></i></button>
       </td>
     </tr>`;
@@ -546,8 +603,8 @@ function populateCategoryDropdowns() {
 
   categories.forEach(c => {
     const count = products.filter(p => p.cat === c.id).length;
-    filterHtml += `<option value="${c.id}">${c.icon || ''} ${c.title} (${count})</option>`;
-    modalHtml += `<option value="${c.id}">${c.icon || ''} ${c.title}</option>`;
+    filterHtml += `<option value="${escapeHTML(c.id)}">${escapeHTML(c.icon || '')} ${escapeHTML(c.title)} (${count})</option>`;
+    modalHtml += `<option value="${escapeHTML(c.id)}">${escapeHTML(c.icon || '')} ${escapeHTML(c.title)}</option>`;
   });
 
   if (filterDropdown) filterDropdown.innerHTML = filterHtml;
@@ -555,30 +612,101 @@ function populateCategoryDropdowns() {
 }
 
 function openAddCategoryModal() {
+  editingCategoryIndex = null;
+  const titleEl = document.getElementById('catModalTitle');
+  if (titleEl) titleEl.textContent = 'Add New Category';
+  document.getElementById('catId').value = '';
+  document.getElementById('catTitle').value = '';
+  document.getElementById('catIcon').value = '';
   document.getElementById('categoryModal').classList.add('open');
 }
+
+function openEditCategoryModal(index) {
+  editingCategoryIndex = index;
+  const target = categories[index];
+  if (!target) return;
+
+  const titleEl = document.getElementById('catModalTitle');
+  if (titleEl) titleEl.textContent = 'Edit Category';
+
+  document.getElementById('catId').value = target.id || '';
+  document.getElementById('catTitle').value = target.title || '';
+  document.getElementById('catIcon').value = target.icon || '📦';
+  document.getElementById('categoryModal').classList.add('open');
+}
+
 function closeCategoryModal() {
   document.getElementById('categoryModal').classList.remove('open');
 }
 
-function saveCategory(e) {
+async function saveCategory(e) {
   e.preventDefault();
   const id = document.getElementById('catId').value.toLowerCase().replace(/\s+/g, '-');
   const title = document.getElementById('catTitle').value;
   const icon = document.getElementById('catIcon').value || '📦';
 
-  categories.push({ id, title, icon });
-  saveToLocalStorage();
-  initAdminData();
-  closeCategoryModal();
-  alert('New Category added successfully!');
+  if (editingCategoryIndex !== null) {
+    const oldCat = categories[editingCategoryIndex];
+    categories[editingCategoryIndex] = { ...oldCat, id, title, icon };
+
+    if (oldCat.id !== id) {
+      products.forEach(p => {
+        if (p.cat === oldCat.id) p.cat = id;
+      });
+    }
+
+    saveToLocalStorage();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+    closeCategoryModal();
+
+    try {
+      if (window.insforgeDB && oldCat.id) {
+        await window.insforgeDB.updateRecord('categories', 'id', oldCat.id, { id, title, icon });
+      }
+    } catch (err) {
+      console.warn('InsForge category edit warning:', err.message);
+    }
+
+    alert('Category updated successfully! Changes reflected live on website.');
+  } else {
+    const newCat = { id, title, icon };
+    categories.push(newCat);
+    saveToLocalStorage();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+    closeCategoryModal();
+
+    try {
+      if (window.insforgeDB) {
+        await window.insforgeDB.insertRecord('categories', newCat);
+      }
+    } catch (err) {
+      console.warn('InsForge category sync warning:', err.message);
+    }
+
+    alert('New Category added successfully and live on website!');
+  }
 }
 
-function deleteCategory(index) {
-  if (confirm('Are you sure you want to delete this category?')) {
-    categories.splice(index, 1);
+async function deleteCategory(index) {
+  const target = categories[index];
+  if (confirm(`Are you sure you want to delete category "${target?.title}"?`)) {
+    const deletedCat = categories.splice(index, 1)[0];
     saveToLocalStorage();
-    initAdminData();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+
+    try {
+      if (window.insforgeDB && deletedCat?.id) {
+        await window.insforgeDB.deleteRecord('categories', 'id', deletedCat.id);
+      }
+    } catch (err) {
+      console.warn('InsForge category delete warning:', err.message);
+    }
   }
 }
 
@@ -607,16 +735,45 @@ function previewImageUrl(url) {
 function showPreviewImg(src) {
   const img = document.getElementById('imgPreview');
   const txt = document.getElementById('previewPlaceholderText');
-  img.src = src;
-  img.style.display = 'block';
-  txt.style.display = 'none';
+  if (img && txt) {
+    img.src = src;
+    img.style.display = 'block';
+    txt.style.display = 'none';
+  }
 }
 
 function openAddProductModal() {
+  editingProductIndex = null;
   currentBase64Image = '';
   document.getElementById('productForm').reset();
+  const titleEl = document.getElementById('productModalTitle');
+  if (titleEl) titleEl.textContent = 'Add New Product';
   document.getElementById('imgPreview').style.display = 'none';
   document.getElementById('previewPlaceholderText').style.display = 'block';
+  document.getElementById('productModal').classList.add('open');
+}
+
+function openEditProductModal(index) {
+  editingProductIndex = index;
+  const target = products[index];
+  if (!target) return;
+
+  const titleEl = document.getElementById('productModalTitle');
+  if (titleEl) titleEl.textContent = 'Edit Product';
+
+  document.getElementById('pTitle').value = target.label || '';
+  document.getElementById('pCategorySelect').value = target.cat || (categories[0]?.id || 'toys');
+  document.getElementById('pPrice').value = target.price || 'Wholesale Rate';
+  document.getElementById('pImgUrl').value = target.src || '';
+
+  currentBase64Image = target.src || '';
+  if (target.src) {
+    showPreviewImg(target.src);
+  } else {
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('previewPlaceholderText').style.display = 'block';
+  }
+
   document.getElementById('productModal').classList.add('open');
 }
 
@@ -624,33 +781,105 @@ function closeProductModal() {
   document.getElementById('productModal').classList.remove('open');
 }
 
-function saveProduct(e) {
+async function saveProduct(e) {
   e.preventDefault();
   const title = document.getElementById('pTitle').value;
   const cat = document.getElementById('pCategorySelect').value;
   const price = document.getElementById('pPrice').value || 'Wholesale Rate';
   const imgPath = currentBase64Image || document.getElementById('pImgUrl').value || 'images/about_promo.png';
 
-  const newObj = {
-    src: imgPath,
-    cat: cat,
-    label: title,
-    price: price,
-    index: Date.now()
-  };
+  if (editingProductIndex !== null) {
+    const oldObj = products[editingProductIndex];
+    const updatedObj = {
+      ...oldObj,
+      src: imgPath,
+      cat: cat,
+      label: title,
+      price: price
+    };
 
-  products.unshift(newObj);
-  saveToLocalStorage();
-  initAdminData();
-  closeProductModal();
-  alert('Product successfully added and reflected on website!');
+    products[editingProductIndex] = updatedObj;
+    saveToLocalStorage();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+    closeProductModal();
+
+    try {
+      if (window.insforgeDB) {
+        if (oldObj.id) {
+          await window.insforgeDB.updateRecord('products', 'id', oldObj.id, {
+            src: updatedObj.src,
+            cat: updatedObj.cat,
+            label: updatedObj.label,
+            price: updatedObj.price
+          });
+        } else if (oldObj.label) {
+          await window.insforgeDB.updateRecord('products', 'label', oldObj.label, {
+            src: updatedObj.src,
+            cat: updatedObj.cat,
+            label: updatedObj.label,
+            price: updatedObj.price
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('InsForge product edit warning:', err.message);
+    }
+
+    alert('Product updated successfully! Changes reflected live on website.');
+  } else {
+    const newObj = {
+      src: imgPath,
+      cat: cat,
+      label: title,
+      price: price,
+      index: Date.now()
+    };
+
+    products.unshift(newObj);
+    saveToLocalStorage();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+    closeProductModal();
+
+    try {
+      if (window.insforgeDB) {
+        await window.insforgeDB.insertRecord('products', {
+          src: newObj.src,
+          cat: newObj.cat,
+          label: newObj.label,
+          price: newObj.price
+        });
+      }
+    } catch (err) {
+      console.warn('InsForge product sync warning:', err.message);
+    }
+
+    alert('Product successfully added and reflected on website!');
+  }
 }
 
-function deleteProduct(index) {
+async function deleteProduct(index) {
   if (confirm('Are you sure you want to delete this product? It will be removed from website.')) {
-    products.splice(index, 1);
+    const deletedProd = products.splice(index, 1)[0];
     saveToLocalStorage();
-    initAdminData();
+    renderCategories();
+    populateCategoryDropdowns();
+    renderProducts();
+
+    try {
+      if (window.insforgeDB && deletedProd) {
+        if (deletedProd.id) {
+          await window.insforgeDB.deleteRecord('products', 'id', deletedProd.id);
+        } else if (deletedProd.label) {
+          await window.insforgeDB.deleteRecord('products', 'label', deletedProd.label);
+        }
+      }
+    } catch (err) {
+      console.warn('InsForge product delete warning:', err.message);
+    }
   }
 }
 
@@ -676,10 +905,10 @@ function filterProducts() {
   products.slice(0, 8).forEach(p => {
     const name = p.label || (p.src ? p.src.split('/').pop().replace('.jpg','') : 'Product');
     quickHtml += `<tr>
-      <td><img src="${p.src}" class="product-img-thumb" onerror="this.src='images/about_promo.png'"></td>
-      <td><strong>${name}</strong></td>
-      <td><span class="badge badge-orange">${p.cat || 'toys'}</span></td>
-      <td>${p.price || 'Wholesale Rate'}</td>
+      <td><img src="${escapeHTML(p.src)}" class="product-img-thumb" onerror="this.src='images/about_promo.png'"></td>
+      <td><strong>${escapeHTML(name)}</strong></td>
+      <td><span class="badge badge-orange">${escapeHTML(p.cat || 'toys')}</span></td>
+      <td>${escapeHTML(p.price || 'Wholesale Rate')}</td>
       <td><span class="badge badge-green">Live on Site</span></td>
     </tr>`;
   });
@@ -688,15 +917,17 @@ function filterProducts() {
   // Render main product table
   const mainTbody = document.getElementById('productsTableTbody');
   let mainHtml = '';
-  filtered.forEach((p, idx) => {
+  filtered.forEach(p => {
+    const realIdx = products.indexOf(p);
     const name = p.label || (p.src ? p.src.split('/').pop().replace('.jpg','') : 'Product');
     mainHtml += `<tr>
-      <td><img src="${p.src}" class="product-img-thumb" onerror="this.src='images/about_promo.png'"></td>
-      <td><strong>${name}</strong></td>
-      <td><span class="badge badge-orange">${p.cat || 'toys'}</span></td>
-      <td>${p.price || 'Wholesale Rate'}</td>
+      <td><img src="${escapeHTML(p.src)}" class="product-img-thumb" onerror="this.src='images/about_promo.png'"></td>
+      <td><strong>${escapeHTML(name)}</strong></td>
+      <td><span class="badge badge-orange">${escapeHTML(p.cat || 'toys')}</span></td>
+      <td>${escapeHTML(p.price || 'Wholesale Rate')}</td>
       <td>
-        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${idx})"><i class="fa-solid fa-trash"></i> Delete</button>
+        <button class="btn btn-outline btn-sm" style="margin-right: 6px; border-color: #3a7fc1; color: #3a7fc1; font-weight: 600;" onclick="openEditProductModal(${realIdx})"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${realIdx})"><i class="fa-solid fa-trash"></i> Delete</button>
       </td>
     </tr>`;
   });
@@ -729,8 +960,9 @@ async function testInsForgeConn() {
     return;
   }
   try {
+    const config = await window.insforgeDB.getConfig();
     const products = await window.insforgeDB.getRecords('products', { limit: 5 });
-    alert(`⚡ InsForge Database Connected Successfully!\n\nBase URL: https://i3yh548q.ap-southeast.insforge.app\nStatus: Online\nSample Records Fetched: ${products.length} items from database.`);
+    alert(`⚡ InsForge Database Connected Successfully!\n\nBase URL: ${config.baseUrl || 'Configured via .env'}\nStatus: Online\nSample Records Fetched: ${products.length} items from database.`);
   } catch (err) {
     alert(`InsForge Connection Error: ${err.message}`);
   }

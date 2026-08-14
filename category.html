@@ -8,12 +8,31 @@
 <meta name="keywords" content="toy photos Madurai, Sri Amman Toys catalogue, wholesale toy pictures Madurai, birthday decor photos, wholesale chocolates Madurai, price stickers photos">
 <link rel="canonical" href="https://www.sriammantoys.in/category.html">
 <link rel="icon" type="image/png" href="images/logo.png">
+<link rel="apple-touch-icon" href="images/logo.png">
+
+<!-- Security & Privacy Directives -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Search Engine Crawlers & AEO/GEO Indexing -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+<!-- Geographic Location Metadata (Madurai Local SEO) -->
+<meta name="geo.region" content="IN-TN">
+<meta name="geo.placename" content="Madurai">
+<meta name="geo.position" content="9.921349;78.126236">
+<meta name="ICBM" content="9.921349, 78.126236">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Category Photos | Sri Amman Toys & Chocolates Madurai">
-<meta property="og:description" content="Browse product photos and wholesale catalogue at Sri Amman Toys Madurai. Toys, birthday decor, balloons, chocolates, price stickers & greeting cards.">
+<meta property="og:site_name" content="Sri Amman Toys Madurai">
+<meta property="og:title" content="Category Photos | Sri Amman Toys &amp; Chocolates Madurai">
+<meta property="og:description" content="Browse product photos and wholesale catalogue at Sri Amman Toys Madurai. Toys, birthday decor, balloons, chocolates, price stickers &amp; greeting cards.">
 <meta property="og:image" content="https://www.sriammantoys.in/images/hero_banner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://www.sriammantoys.in/category.html">
 <meta property="og:locale" content="en_IN">
 
@@ -65,7 +84,7 @@
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 /* ===== DESIGN SYSTEM & VARIABLES ===== */
@@ -90,6 +109,11 @@
   --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
   --transition: all 0.28s ease;
 }
+
+.nav-brand-text { display: inline-flex; gap: 4px; font-weight: 800; }
+.brand-s { color: #3a7fc1 !important; }
+.brand-a { color: #f59e0b !important; }
+.brand-t { color: #e0314b !important; }
 
 body.dark {
   --ink: #f8fafc;
@@ -619,10 +643,13 @@ footer {
   <div class="container nav-container">
     <a href="index.html" class="nav-logo">
       <img src="images/logo.png" alt="Sri Amman Toys Logo">
-      <span>Sri Amman Toys</span>
+      <span class="nav-brand-text"><span class="brand-s">Sri</span> <span class="brand-a">Amman</span> <span class="brand-t">Toys</span></span>
     </a>
 
     <div class="nav-actions">
+      <a href="fssai-licence-2026-2027.pdf" download="FSSAI_Licence_Sri_Amman_Toys_2026_2027.pdf" class="btn btn-outline" style="border-color: #10b981; color: #10b981; font-weight: 700; text-decoration: none;">
+        <span>🛡️ FSSAI Licence PDF</span>
+      </a>
       <a href="index.html#products" class="btn btn-outline">
         <svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span>Back to Home</span>
@@ -695,13 +722,7 @@ footer {
   </div>
   <div class="lb-footer">
     <span id="lbCounter">1 / 1</span>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3)" id="lbSaveBtn">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        Save Image
-      </button>
-      <button class="btn btn-whatsapp" id="lbWABtn">Enquire on WhatsApp</button>
-    </div>
+    <button class="btn btn-whatsapp" id="lbWABtn">Enquire on WhatsApp</button>
   </div>
 </div>
 
@@ -723,14 +744,39 @@ footer {
 
 <script>
 /* ============ CATEGORY DEFINITIONS ============ */
-const CATEGORIES = [
-  { key: 'toys', label: 'Toys & Educational Games', emoji: '🧸', desc: 'Remote control toys, soft toys, baby toys, board games & learning aids.' },
-  { key: 'ballon', label: 'Balloons & Birthday Decor', emoji: '🎈', desc: 'Balloon bunches, decoration sets and party backdrops to light up any celebration.' },
-  { key: 'chocolate', label: 'Chocolates', emoji: '🍫', desc: 'Popular chocolate brands and gift boxes, perfect for return gifts and celebrations.' },
-  { key: 'chocolate2', label: 'Wafers & Party Treats', emoji: '🍬', desc: 'Assorted wafers, candies and snack treats for goodie bags and party trays.' },
-  { key: 'prices', label: 'Price Stickers & Tags', emoji: '🏷️', desc: 'Bulk price stickers and tags for shops, boutiques and wholesale packaging.' },
-  { key: 'stickers-cards', label: 'Greeting Cards & Stickers', emoji: '🎴', desc: 'Greeting cards, gift cards and decorative stickers for every festival and occasion.' }
-];
+function getActiveCategories() {
+  const defaultList = [
+    { key: 'toys', label: 'Toys & Educational Games', emoji: '🧸', desc: 'Remote control toys, soft toys, baby toys, board games & learning aids.' },
+    { key: 'ballon', label: 'Balloons & Birthday Decor', emoji: '🎈', desc: 'Balloon bunches, decoration sets and party backdrops to light up any celebration.' },
+    { key: 'chocolate', label: 'Chocolates', emoji: '🍫', desc: 'Popular chocolate brands and gift boxes, perfect for return gifts and celebrations.' },
+    { key: 'chocolate2', label: 'Wafers & Party Treats', emoji: '🍬', desc: 'Assorted wafers, candies and snack treats for goodie bags and party trays.' },
+    { key: 'prices', label: 'Price Stickers & Tags', emoji: '🏷️', desc: 'Bulk price stickers and tags for shops, boutiques and wholesale packaging.' },
+    { key: 'stickers-cards', label: 'Greeting Cards & Stickers', emoji: '🎴', desc: 'Greeting cards, gift cards and decorative stickers for every festival and occasion.' }
+  ];
+
+  const map = new Map();
+  defaultList.forEach(c => map.set(c.key, c));
+
+  try {
+    const stored = localStorage.getItem('sat_categories');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      parsed.forEach(c => {
+        const k = (c.id || c.key || '').toLowerCase();
+        if (k) {
+          map.set(k, {
+            key: k,
+            label: c.title || c.label || k,
+            emoji: c.icon || c.emoji || '📦',
+            desc: `Explore our high quality ${c.title || c.label || k} collection.`
+          });
+        }
+      });
+    }
+  } catch (e) {}
+
+  return Array.from(map.values());
+}
 
 /* ============ STATE MANAGEMENT ============ */
 let currentCategoryKey = 'toys';
@@ -746,6 +792,17 @@ darkBtn.addEventListener('click', () => {
 
 if (localStorage.getItem('sat_theme') === 'dark') {
   document.body.classList.add('dark');
+}
+
+/* Security & HTML Escaping helper */
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /* Fallback image helper */
@@ -774,30 +831,18 @@ function getUrlCategory() {
 /* Match Category Info */
 function getCatInfo(key) {
   const normKey = (key || '').toLowerCase().trim();
+  const activeCategories = getActiveCategories();
   
-  // First check custom categories from localStorage
-  try {
-    const stored = localStorage.getItem('sat_categories');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      const match = parsed.find(c => (c.id || '').toLowerCase() === normKey || (c.title || '').toLowerCase() === normKey);
-      if (match) {
-        return { key: match.id, label: match.title, emoji: match.icon || '📦', desc: `Explore our collection of ${match.title.toLowerCase()}.` };
-      }
-    }
-  } catch(e) {}
-
-  // Match default categories
-  const found = CATEGORIES.find(c => c.key === normKey || normKey.includes(c.key) || c.key.includes(normKey));
+  const found = activeCategories.find(c => c.key === normKey || normKey.includes(c.key) || c.key.includes(normKey));
   if (found) return found;
 
   // Keyword match fallbacks
-  if (normKey.includes('toy') || normKey.includes('game')) return CATEGORIES[0];
-  if (normKey.includes('ballon') || normKey.includes('decor')) return CATEGORIES[1];
-  if (normKey.includes('chocolate') && !normKey.includes('2')) return CATEGORIES[2];
-  if (normKey.includes('wafer') || normKey.includes('treat') || normKey.includes('chocolate2')) return CATEGORIES[3];
-  if (normKey.includes('price') || normKey.includes('tag')) return CATEGORIES[4];
-  if (normKey.includes('sticker') || normKey.includes('card')) return CATEGORIES[5];
+  if (normKey.includes('toy') || normKey.includes('game')) return activeCategories[0];
+  if (normKey.includes('ballon') || normKey.includes('decor')) return activeCategories[1];
+  if (normKey.includes('chocolate') && !normKey.includes('2')) return activeCategories[2];
+  if (normKey.includes('wafer') || normKey.includes('treat') || normKey.includes('chocolate2')) return activeCategories[3];
+  if (normKey.includes('price') || normKey.includes('tag')) return activeCategories[4];
+  if (normKey.includes('sticker') || normKey.includes('card')) return activeCategories[5];
 
   return { key: normKey, label: normKey.charAt(0).toUpperCase() + normKey.slice(1), emoji: '📦', desc: `Collection of items in ${normKey}.` };
 }
@@ -834,9 +879,11 @@ function fetchProductsForCategory(catKey) {
 /* Render Category Pills Bar */
 function renderPillsBar() {
   const container = document.getElementById('categoryPills');
+  if (!container) return;
   container.innerHTML = '';
 
-  CATEGORIES.forEach(c => {
+  const activeCategories = getActiveCategories();
+  activeCategories.forEach(c => {
     const btn = document.createElement('button');
     btn.className = `pill-btn ${c.key === currentCategoryKey ? 'active' : ''}`;
     btn.innerHTML = `<span>${c.emoji}</span> <span>${c.label}</span>`;
@@ -877,28 +924,16 @@ function renderProductGrid(items) {
   items.forEach((item, index) => {
     const imgSrc = item.src || item.path;
     const title = getProductTitle(item);
+    const safeTitle = escapeHTML(title);
+    const safeSrc = escapeHTML(imgSrc);
     
     const card = document.createElement('article');
     card.className = 'prod-card';
+    card.style.cursor = 'pointer';
+    card.onclick = () => openLightbox(index);
     card.innerHTML = `
-      <div class="prod-img-box" onclick="openLightbox(${index})">
-        <img src="${imgSrc}" alt="${title}" loading="lazy" onerror="imgFallback(this, '${title.replace(/'/g, "\\'")}')">
-      </div>
-      <div class="prod-card-body">
-        <div class="prod-title" title="${title}">${title}</div>
-        <div class="prod-actions">
-          <button class="btn-card-action" onclick="openLightbox(${index})">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-            View
-          </button>
-          <button class="btn-card-action" onclick="downloadPhoto('${imgSrc}', '${title}')">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Save
-          </button>
-          <button class="btn-card-action btn-card-wa" onclick="waEnquire('${title.replace(/'/g, "\\'")}')">
-            Enquire
-          </button>
-        </div>
+      <div class="prod-img-box" style="height:260px;">
+        <img src="${safeSrc}" alt="${safeTitle}" loading="lazy" onerror="imgFallback(this, '${safeTitle.replace(/'/g, "\\'")}')">
       </div>
     `;
     grid.appendChild(card);
@@ -966,8 +1001,8 @@ function updateLightbox() {
   lbTitle.textContent = title;
   lbCounter.textContent = `${currentLbIndex + 1} of ${categoryProducts.length}`;
 
-  lbSaveBtn.onclick = () => downloadPhoto(imgSrc, title);
-  lbWABtn.onclick = () => waEnquire(title);
+  if (lbSaveBtn) lbSaveBtn.onclick = () => downloadPhoto(imgSrc, title);
+  if (lbWABtn) lbWABtn.onclick = () => waEnquire(title);
 }
 
 function closeLightbox() {
@@ -975,37 +1010,95 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 
-lbClose.onclick = closeLightbox;
-lbModal.onclick = (e) => { if (e.target === lbModal) closeLightbox(); };
+if (lbClose) lbClose.onclick = closeLightbox;
+if (lbModal) lbModal.onclick = (e) => { if (e.target === lbModal) closeLightbox(); };
 
-lbPrev.onclick = () => {
+if (lbPrev) lbPrev.onclick = () => {
   if (categoryProducts.length === 0) return;
   currentLbIndex = (currentLbIndex - 1 + categoryProducts.length) % categoryProducts.length;
   updateLightbox();
 };
 
-lbNext.onclick = () => {
+if (lbNext) lbNext.onclick = () => {
   if (categoryProducts.length === 0) return;
   currentLbIndex = (currentLbIndex + 1) % categoryProducts.length;
   updateLightbox();
 };
 
 document.addEventListener('keydown', (e) => {
-  if (!lbModal.classList.contains('open')) return;
+  if (!lbModal || !lbModal.classList.contains('open')) return;
   if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') lbPrev.click();
-  if (e.key === 'ArrowRight') lbNext.click();
+  if (e.key === 'ArrowLeft' && lbPrev) lbPrev.click();
+  if (e.key === 'ArrowRight' && lbNext) lbNext.click();
 });
 
-/* Initialize Page */
-document.addEventListener('DOMContentLoaded', () => {
+/* Initialize Page with InsForge Sync */
+async function initCategoryPage() {
   currentCategoryKey = getUrlCategory();
+
+  if (window.insforgeDB) {
+    try {
+      const remoteCats = await window.insforgeDB.getRecords('categories');
+      if (remoteCats && remoteCats.length > 0) {
+        const stored = JSON.parse(localStorage.getItem('sat_categories') || '[]');
+        const catMap = new Map();
+        stored.forEach(c => catMap.set(c.id, c));
+        remoteCats.forEach(c => catMap.set(c.id, { id: c.id, title: c.title, icon: c.icon }));
+        localStorage.setItem('sat_categories', JSON.stringify(Array.from(catMap.values())));
+      }
+
+      const remoteProds = await window.insforgeDB.getRecords('products');
+      if (remoteProds && remoteProds.length > 0) {
+        let storedProds = JSON.parse(localStorage.getItem('sat_products') || '[]');
+        const prodKeys = new Set(storedProds.map(p => (p.label || '') + (p.src || '')));
+        remoteProds.forEach(p => {
+          const k = (p.label || '') + (p.src || '');
+          if (!prodKeys.has(k)) {
+            storedProds.unshift({ id: p.id, src: p.src, cat: p.cat, label: p.label, price: p.price });
+            prodKeys.add(k);
+          }
+        });
+        localStorage.setItem('sat_products', JSON.stringify(storedProds));
+      }
+    } catch(e) {
+      console.log('InsForge fetch note:', e.message);
+    }
+  }
+
   const catInfo = getCatInfo(currentCategoryKey);
   categoryProducts = fetchProductsForCategory(currentCategoryKey);
 
   renderPillsBar();
   renderHero(catInfo, categoryProducts.length);
   renderProductGrid(categoryProducts);
+}
+
+document.addEventListener('DOMContentLoaded', initCategoryPage);
+
+/* FSSAI LICENCE MODAL HELPERS */
+function openFssaiModal() {
+  const modal = document.getElementById('fssaiModal');
+  const docViewer = document.getElementById('fssaiDocViewerCat');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (docViewer) docViewer.scrollTop = 0;
+  }
+}
+
+function closeFssaiModal() {
+  const modal = document.getElementById('fssaiModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('fssaiModal');
+  if (modal && e.target === modal) {
+    closeFssaiModal();
+  }
 });
 </script>
 </body>
