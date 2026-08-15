@@ -324,21 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   window.openCatModal = window.viewCategoryInGallery;
 
-  /* ============ COOKIE BAR ============ */
-  const cookieBar = document.getElementById('cookieBar');
-  const cookieAccept = document.getElementById('cookieAccept');
-  if (cookieBar && !localStorage.getItem('cookieOk') && !localStorage.getItem('sat_cookie_ack')) {
-    setTimeout(() => cookieBar.classList.add('show'), 1200);
-  }
-  if (cookieAccept) {
-    cookieAccept.addEventListener('click', () => {
-      localStorage.setItem('cookieOk', '1');
-      localStorage.setItem('sat_cookie_ack', '1');
-      if (cookieBar) cookieBar.classList.remove('show');
-      showToast('Preferences saved!');
-    });
-  }
-
   /* ============ DYNAMIC HOMEPAGE CATEGORIES ============ */
   const mainCatGrid = document.getElementById('mainCatGrid');
 

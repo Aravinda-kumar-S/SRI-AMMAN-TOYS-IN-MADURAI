@@ -486,60 +486,25 @@ h1, h2, h3, h4 {
 }
 
 .hero-logo-wrap {
-  margin-bottom: 8px !important;
+  margin-bottom: 12px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hero-logo-img {
-  width: 96px !important;
+  width: clamp(180px, 38vw, 260px) !important;
+  max-width: 260px;
   height: auto;
-  border-radius: 12px;
-  filter: drop-shadow(0 4px 14px rgba(58,127,193,0.18));
+  border-radius: 0 !important;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.12));
   transition: transform 0.3s ease;
 }
-
-.hero-brand-name {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  font-size: clamp(2rem, 4.5vw, 3.2rem) !important;
-  font-weight: 900;
-  letter-spacing: -0.5px;
-  line-height: 1.15;
-  margin: 2px 0 4px !important;
+.hero-logo-img:hover {
+  transform: scale(1.05);
 }
 
-.hero-sub-tagline {
-  font-size: clamp(0.85rem, 2vw, 1.05rem) !important;
-  font-weight: 800;
-  color: var(--sat-gold);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin: 0 0 8px !important;
-}
-
-.hero-wholesale-badge {
-  display: inline-block;
-  border: 2px solid var(--sat-red);
-  border-radius: 6px;
-  padding: 4px 20px !important;
-  margin-bottom: 8px !important;
-  background: var(--sat-red);
-}
-
-.hero-wholesale-badge span {
-  font-size: 0.85rem !important;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.hero-city {
-  font-size: clamp(0.9rem, 2vw, 1.15rem) !important;
-  font-weight: 800;
-  color: var(--sat-blue);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin: 0 0 14px !important;
-}
+/* Hero Brand Styles consolidated below */
 
 .hero-actions {
   display: flex;
@@ -1697,64 +1662,6 @@ h1, h2, h3, h4 {
   color: var(--ink-soft);
 }
 
-/* ===== FLOATING DOCK ===== */
-.floating-dock {
-  position: fixed;
-  bottom: 28px;
-  right: 24px;
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.fab {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.18);
-  transition: var(--transition);
-  position: relative;
-}
-
-.fab:hover { transform: scale(1.1); }
-.fab svg { width: 22px; height: 22px; }
-
-.fab.whatsapp { background: #25d366; color: #fff; }
-.fab.call { background: #3b82f6; color: #fff; }
-.fab.maps { background: #ea4335; color: #fff; }
-.fab.insta { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); color: #fff; }
-.fab.yt { background: #ff0000; color: #fff; }
-
-.fab.top {
-  background: var(--ink);
-  color: #fff;
-  opacity: 0;
-  pointer-events: none;
-  transition: var(--transition);
-}
-
-.fab.top.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #25d366;
-  animation: pulse-ring 2s ease-out infinite;
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.7; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
 /* ===== FOOTER ===== */
 footer {
   background: #ffffff;
@@ -1864,12 +1771,14 @@ footer {
   font-weight: 600;
 }
 
-/* ===== TOAST & COOKIE BAR ===== */
+/* ===== TOAST NOTIFICATION ===== */
 .toast {
   position: fixed;
   bottom: 32px;
   left: 50%;
-  transform: translateX(-50%) translateY(60px);
+  transform: translateX(-50%) translateY(120px);
+  opacity: 0;
+  visibility: hidden;
   background: #ffffff;
   color: var(--ink);
   border: 1px solid var(--border);
@@ -1880,47 +1789,22 @@ footer {
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.16);
   z-index: 9000;
-  transition: transform 0.3s;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   pointer-events: none;
 }
 
-.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
 
 .toast svg {
   width: 18px;
   height: 18px;
   stroke: #25d366;
-}
-
-.cookie-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  color: var(--ink);
-  border-top: 1px solid var(--border);
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  z-index: 4000;
-  transform: translateY(100%);
-  transition: transform 0.4s;
-  flex-wrap: wrap;
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
-}
-
-.cookie-bar.show { transform: translateY(0); }
-
-.cookie-bar p {
-  font-size: 13.5px;
-  color: var(--ink-soft);
-  flex: 1;
-  min-width: 200px;
 }
 
 /* ===== SCROLL REVEAL ===== */
@@ -2029,46 +1913,86 @@ body.dark {
 }
 .hero-logo-img:hover { transform: scale(1.04); }
 
-/* Brand name  Sri · Amman · Toys — each word in a logo colour */
+/* Brand name  Sri · Amman · Toys — attractive playful premium typography */
 .hero-brand-name {
-  font-family: 'Fredoka One', 'Nunito', 'Inter', sans-serif;
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 900;
+  font-family: 'Fredoka', 'Poppins', 'Nunito', sans-serif;
+  font-size: clamp(2.4rem, 6.2vw, 4.1rem);
+  font-weight: 800;
   letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin: 0 0 6px;
+  line-height: 1.12;
+  margin: 2px 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
-.brand-s { color: var(--sat-blue);  }
-.brand-a { color: var(--sat-gold);  }
-.brand-t { color: var(--sat-red);   }
+.brand-s { color: var(--sat-blue); }
+.brand-a { color: var(--sat-gold); }
+.brand-t { color: var(--sat-red); }
 
-/* Toys & Chocolate sub-line */
+/* Toys & Chocolates sub-line — vibrant attractive gradient & modern tracking */
 .hero-sub-tagline {
-  font-family: 'Nunito', 'Inter', sans-serif;
-  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
-  font-weight: 700;
-  color: var(--sat-gold);
-  letter-spacing: 1px;
+  font-family: 'Nunito', 'Poppins', sans-serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.48rem);
+  font-weight: 800;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
   margin: 0 0 14px;
+  background: linear-gradient(135deg, #ff6b1a 0%, #e0314b 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  filter: drop-shadow(0 2px 8px rgba(255, 107, 26, 0.15));
 }
 
-/* Red-border Wholesale badge with white text */
+/* Red-border Wholesale badge with left and right circular ticket punch holes */
 .hero-wholesale-badge {
-  display: inline-block;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sat-red);
   border: 3px solid var(--sat-red);
   border-radius: 8px;
-  padding: 6px 28px;
+  padding: 6px 30px;
   margin-bottom: 12px;
-  background: var(--sat-red);
+  box-shadow: 0 4px 14px rgba(224, 49, 75, 0.25);
+  overflow: visible;
+}
+.hero-wholesale-badge::before,
+.hero-wholesale-badge::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: inset 0 0 0 2px rgba(224, 49, 75, 0.2);
+  z-index: 2;
+}
+.hero-wholesale-badge::before {
+  left: -8px;
+}
+.hero-wholesale-badge::after {
+  right: -8px;
+}
+body.dark .hero-wholesale-badge::before,
+body.dark .hero-wholesale-badge::after {
+  background: #0f172a;
+  box-shadow: inset 0 0 0 2px rgba(224, 49, 75, 0.4);
 }
 .hero-wholesale-badge span {
-  font-family: 'Fredoka One', 'Nunito', 'Inter', sans-serif;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
   font-size: 1rem;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 3px;
   text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 /* City name */
@@ -2084,7 +2008,7 @@ body.dark {
 
 /* Store line */
 .hero-store-line {
-  font-family: 'Fredoka One', 'Nunito', 'Inter', sans-serif;
+  font-family: 'Fredoka', 'Nunito', 'Inter', sans-serif;
   font-size: clamp(0.95rem, 2vw, 1.15rem);
   font-weight: 700;
   color: var(--sat-gold);
@@ -2096,8 +2020,9 @@ body.dark {
 
 /* Responsive tweaks */
 @media (max-width: 640px) {
-  .hero-logo-img { width: 120px; }
-  .hero-wholesale-badge { padding: 5px 20px; }
+  .hero-logo-img { width: clamp(160px, 46vw, 210px) !important; }
+  .hero-wholesale-badge { padding: 5px 24px; }
+  .hero-brand-name { gap: 8px; }
 }
 
 /* ===== Tamil Typography ===== */
