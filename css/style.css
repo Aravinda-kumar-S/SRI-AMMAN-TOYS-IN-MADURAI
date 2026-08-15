@@ -1662,6 +1662,90 @@ h1, h2, h3, h4 {
   color: var(--ink-soft);
 }
 
+/* ===== FLOATING CALL & WHATSAPP BUTTONS ONLY ===== */
+.floating-actions {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.float-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  position: relative;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.float-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+}
+
+.float-btn svg {
+  width: 25px;
+  height: 25px;
+}
+
+.float-btn.float-call {
+  background: #2563eb;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.4);
+}
+
+.float-btn.float-wa {
+  background: #25d366;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
+}
+
+.float-pulse {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: #25d366;
+  opacity: 0.4;
+  animation: float-pulse-anim 2s infinite ease-out;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes float-pulse-anim {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .floating-actions {
+    bottom: 20px;
+    right: 16px;
+    gap: 10px;
+  }
+  .float-btn {
+    width: 48px;
+    height: 48px;
+  }
+  .float-btn svg {
+    width: 23px;
+    height: 23px;
+  }
+}
+
 /* ===== FOOTER ===== */
 footer {
   background: #ffffff;
